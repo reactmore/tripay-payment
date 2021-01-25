@@ -1,8 +1,10 @@
 <?php
-namespace reactmore\lib;
+
+namespace Reactmore\lib;
 
 
-class Tripay {
+class Tripay
+{
   protected $api_PKey = '';
   protected $api_Key = '';
   // Database
@@ -46,8 +48,9 @@ class Tripay {
   public $URL_transPembOpenMs = '';
   public $URL_transPembOpenMp = 'https://payment.tripay.co.id/api/open-payment/{uuid}/transaction';
 
-  public function __construct($privateKey = null, $apiKey = null) {
-    if ($privateKey === null AND $apiKey === null) {
+  public function __construct($privateKey = null, $apiKey = null)
+  {
+    if ($privateKey === null and $apiKey === null) {
       exit('Mohon isikan data private dan api key anda');
     } else {
       $this->api_PKey = $privateKey;
@@ -56,34 +59,37 @@ class Tripay {
     }
   }
 
-  private function checkKey() {
-    if ($this->api_PKey === null OR $this->api_PKey === '' AND $this->api_Key === null OR $this->api_Key === '') {
+  private function checkKey()
+  {
+    if ($this->api_PKey === null or $this->api_PKey === '' and $this->api_Key === null or $this->api_Key === '') {
       exit('Mohon isikan data private dan api key anda');
     } else {
       return true;
     }
   }
 
-  private function dQuery($merchantH = null, $statusH = null) {
+  private function dQuery($merchantH = null, $statusH = null)
+  {
     $this->checkKey();
-    if ($merchantH === null OR $merchantH === '' AND $statusH === null OR $statusH === '' AND $this->field_status === null OR $this->field_status === '' AND $this->field_kodetrans === null OR $this->field_kodetrans === '' AND $this->tabel_trans === null OR $this->tabel_trans === '') {
+    if ($merchantH === null or $merchantH === '' and $statusH === null or $statusH === '' and $this->field_status === null or $this->field_status === '' and $this->field_kodetrans === null or $this->field_kodetrans === '' and $this->tabel_trans === null or $this->tabel_trans === '') {
       return false;
     } else {
       if ($statusH === 'UNPAID') {
-        return "UPDATE ".addslashes($this->tabel_trans)." SET ".addslashes($this->field_status)." = 'UNPAID' WHERE ".addslashes($this->field_kodetrans)." = '".addslashes($merchantH)."'";
+        return "UPDATE " . addslashes($this->tabel_trans) . " SET " . addslashes($this->field_status) . " = 'UNPAID' WHERE " . addslashes($this->field_kodetrans) . " = '" . addslashes($merchantH) . "'";
       } elseif ($statusH === 'PAID') {
-        return "UPDATE ".addslashes($this->tabel_trans)." SET ".addslashes($this->field_status)." = 'PAID' WHERE ".addslashes($this->field_kodetrans)." = '".addslashes($merchantH)."'";
+        return "UPDATE " . addslashes($this->tabel_trans) . " SET " . addslashes($this->field_status) . " = 'PAID' WHERE " . addslashes($this->field_kodetrans) . " = '" . addslashes($merchantH) . "'";
       } elseif ($statusH === 'EXPIRED') {
-        return "UPDATE ".addslashes($this->tabel_trans)." SET ".addslashes($this->field_status)." = 'EXPIRED' WHERE ".addslashes($this->field_kodetrans)." = '".addslashes($merchantH)."'";
+        return "UPDATE " . addslashes($this->tabel_trans) . " SET " . addslashes($this->field_status) . " = 'EXPIRED' WHERE " . addslashes($this->field_kodetrans) . " = '" . addslashes($merchantH) . "'";
       } elseif ($statusH === 'FAILED') {
-        return "UPDATE ".addslashes($this->tabel_trans)." SET ".addslashes($this->field_status)." = 'FAILED' WHERE ".addslashes($this->field_kodetrans)." = '".addslashes($merchantH)."'";
+        return "UPDATE " . addslashes($this->tabel_trans) . " SET " . addslashes($this->field_status) . " = 'FAILED' WHERE " . addslashes($this->field_kodetrans) . " = '" . addslashes($merchantH) . "'";
       } elseif ($statusH === 'REFUND') {
-        return "UPDATE ".addslashes($this->tabel_trans)." SET ".addslashes($this->field_status)." = 'REFUND' WHERE ".addslashes($this->field_kodetrans)." = '".addslashes($merchantH)."'";
+        return "UPDATE " . addslashes($this->tabel_trans) . " SET " . addslashes($this->field_status) . " = 'REFUND' WHERE " . addslashes($this->field_kodetrans) . " = '" . addslashes($merchantH) . "'";
       }
     }
   }
 
-  public function callBack() {
+  public function callBack()
+  {
     $this->checkKey();
     header('Content-Type: application/json');
     $result = array();
@@ -173,27 +179,28 @@ class Tripay {
     }
   }
 
-  public function curlAPI($url = null, $payloads = null, $method = null) {
+  public function curlAPI($url = null, $payloads = null, $method = null)
+  {
     $this->checkKey();
     header('Content-Type: application/json');
     $result = array();
     $curl = curl_init();
 
-    if ($method === null AND $url === null) {
+    if ($method === null and $url === null) {
       $result['error'] = true;
       $result['status'] = 404;
-    } elseif ($method === 'get' OR $method === 'GET') {
+    } elseif ($method === 'get' or $method === 'GET') {
       curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      if ($payloads != null OR $payloads != '') {
-        curl_setopt($curl, CURLOPT_URL, $url."?".http_build_query($payloads));
-      } elseif (isset($payloads['uuid']) AND isset($payloads['uuid_type'])) {
-        curl_setopt($curl, CURLOPT_URL, $url.$payloads['uuid'].$payloads['uuid_type']);
+      if ($payloads != null or $payloads != '') {
+        curl_setopt($curl, CURLOPT_URL, $url . "?" . http_build_query($payloads));
+      } elseif (isset($payloads['uuid']) and isset($payloads['uuid_type'])) {
+        curl_setopt($curl, CURLOPT_URL, $url . $payloads['uuid'] . $payloads['uuid_type']);
       } else {
         curl_setopt($curl, CURLOPT_URL, $url);
       }
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_HEADER, false);
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer ".$this->api_Key));
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $this->api_Key));
       curl_setopt($curl, CURLOPT_FAILONERROR, false);
 
       $response = curl_exec($curl);
@@ -209,12 +216,12 @@ class Tripay {
       } else {
         $result = $response;
       }
-    } elseif ($method === 'post' OR $method === 'POST') {
+    } elseif ($method === 'post' or $method === 'POST') {
       curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
       curl_setopt($curl, CURLOPT_URL, $url);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_HEADER, false);
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer ".$this->api_Key));
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array("Authorization: Bearer " . $this->api_Key));
       curl_setopt($curl, CURLOPT_FAILONERROR, false);
       curl_setopt($curl, CURLOPT_POST, true);
       curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($payloads));

@@ -3,10 +3,12 @@
   "description": "Payment Gateway Tripay",
   "type": "library",
   "license": "MIT",
-  "authors": [{
-    "name": "reactmore",
-    "email": "reactmorecom@gmail.com"
-  }],
+  "authors": [
+    {
+      "name": "reactmore",
+      "email": "reactmorecom@gmail.com"
+    }
+  ],
   "require": {
     "php": ">=5.3.0",
     "ext-curl": "*",

@@ -1,8 +1,8 @@
 <?php
 
-namespace reactmore;
+namespace Reactmore;
 
-use reactmore\lib\Tripay;
+use Reactmore\lib\Tripay;
 
 class Method {
 
@@ -135,5 +135,3 @@ class Method {
   }
 
 }
-
-?>

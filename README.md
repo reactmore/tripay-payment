@@ -6,6 +6,11 @@ Library untuk TriPay (Payment Gateway Lokal Indonesia)
 - Lakukan KYC setelah di di verifikasi AM tripay akan menghubungi lewat whatsapp
 - Untuk group api membutuhkan kerja sama khusus.
 
+# Composer 
+```
+composer require reactmore/tripay
+```
+
 # Method
 - Reguler API
 ```php
@@ -31,7 +36,7 @@ Method::PayOpenTrans();
 
 # Usage
 ```php
-require __DIR__ . '/../Tripay.php' or Autoload;
+require __DIR__ . '/vendor/autoload.php';
 
 use Reactmore\Method as MTripay;
 
@@ -42,7 +47,7 @@ $tripay = new MTripay($privatekey, $apikey, false);
 
 $data = [
 'amount' => 100000,
-'code' => QRIS, // delete to get all
+'code' => 'QRIS', // delete to get all
 ];
 
 $result = $tripay->CalcPay($data);
