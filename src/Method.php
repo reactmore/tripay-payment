@@ -44,15 +44,23 @@ class Method
   /* 'code' => @string
   */
 
-  public function PaymentChannelAll($param = null)
+  public function PaymentChannelAll($param = null, $group = null)
   {
-    $result = $this->tripay->curlAPI(
+    $data = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_channelPp : $this->tripay->URL_channelPs,
       $param ?: $param,
       'get'
     );
 
-    return json_decode($result);
+    if (!empty($group)) {
+      $result = json_decode($data);
+      $result = json_decode($result, true);
+
+      $data = Driver::filterGroup($result['data'], $group);
+      return $data;
+    }
+
+    return json_decode($data);
   }
 
 

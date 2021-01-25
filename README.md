@@ -19,6 +19,12 @@ composer require reactmore/tripay
 Method::MerchantChannelAll($data);
 Method::PaymentChannelAll($data);
 
+/* usage deep filter value */
+/* Only Get All Virtual Account Group */
+Method::MerchantChannelAll(null, 'Virtual Account');
+Method::PaymentChannelAll(null, 'Virtual Account');
+
+
 /* $data[code] = @string */
 /* $data[amount] = @int */
 Method::CalcPay();
