@@ -3,12 +3,15 @@
 namespace Reactmore;
 
 use Reactmore\lib\Tripay;
+use Reactmore\driver\Driver;
 
-class Method {
+class Method
+{
 
   protected $production = false;
 
-  public function __construct($privatekey = null, $apikey = null, $production = false) {
+  public function __construct($privatekey = null, $apikey = null, $production = false)
+  {
     $this->production = $production;
     $this->tripay = new Tripay($privatekey, $apikey);
   }
@@ -18,13 +21,22 @@ class Method {
   /* 'code' => @string
   */
 
-  public function MerchantChannelAll($param = null) {
-    $result = $this->tripay->curlAPI(
+  public function MerchantChannelAll($param = null, $group = null)
+  {
+    $data = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_channelMp : $this->tripay->URL_channelMs,
       $param ?: $param,
-      'get');
+      'get'
+    );
+    if (!empty($group)) {
+      $result = json_decode($data);
+      $result = json_decode($result, true);
 
-    return json_decode($result);
+      $data = Driver::filterGroup($result['data'], $group);
+      return $data;
+    }
+
+    return json_decode($data);
   }
 
   /* Get Payment Channel
@@ -32,14 +44,18 @@ class Method {
   /* 'code' => @string
   */
 
-  public function PaymentChannelAll($param = null) {
+  public function PaymentChannelAll($param = null)
+  {
     $result = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_channelPp : $this->tripay->URL_channelPs,
       $param ?: $param,
-      'get');
+      'get'
+    );
 
     return json_decode($result);
   }
+
+
 
   /* Fee Calculator
   /* If Parameter NULL Get All Data
@@ -47,11 +63,13 @@ class Method {
   /* 'code' => @string (opsional)
   */
 
-  public function CalcPay(array $param) {
+  public function CalcPay(array $param)
+  {
     $result = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_calcMp : $this->tripay->URL_calcMs,
       $param,
-      'get');
+      'get'
+    );
 
     return json_decode($result);
   }
@@ -62,11 +80,13 @@ class Method {
   /* https://payment.tripay.co.id/developer
   */
 
-  public function CreateCloseTrans(array $param) {
+  public function CreateCloseTrans(array $param)
+  {
     $result = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_transMp : $this->tripay->URL_transMs,
       $param,
-      'post');
+      'post'
+    );
 
     return json_decode($result);
   }
@@ -75,11 +95,13 @@ class Method {
   /* 'reference' => @string (require)
   */
 
-  public function DetailCloseTrans($reference) {
+  public function DetailCloseTrans($reference)
+  {
     $result = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_transDetailMp : $this->tripay->URL_transDetailMs,
       $reference,
-      'get');
+      'get'
+    );
 
     return json_decode($result);
   }
@@ -90,16 +112,19 @@ class Method {
   /* This Method only On Production cause url sandbox not found
   */
 
-  public function CreateOpenTrans(array $param) {
+  public function CreateOpenTrans(array $param)
+  {
     $result = $this->tripay->curlAPI(
       $this->production ? $this->tripay->URL_transOpenMp : $this->tripay->URL_transOpenMs,
       $param,
-      'post');
+      'post'
+    );
 
     return json_decode($result);
   }
 
-  public function DetailOpenTrans($id) {
+  public function DetailOpenTrans($id)
+  {
 
     $searchTerms = array('{uuid}');
     $replacements = array($id);
@@ -111,13 +136,15 @@ class Method {
     $result = $this->tripay->curlAPI(
       $out_url,
       null,
-      'get');
+      'get'
+    );
 
 
     return json_decode($result);
   }
 
-  public function PayOpenTrans($id) {
+  public function PayOpenTrans($id)
+  {
 
     $searchTerms = array('{uuid}');
     $replacements = array($id);
@@ -129,9 +156,9 @@ class Method {
     $result = $this->tripay->curlAPI(
       $out_url,
       null,
-      'get');
+      'get'
+    );
 
     return json_decode($result);
   }
-
 }
